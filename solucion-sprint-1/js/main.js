@@ -11,7 +11,7 @@ const inputPhoto = document.querySelector('.js-input-photo');
 const inputName = document.querySelector('.js-input-name');
 const inputRace = document.querySelector('.js-input-race');
 const linkNewFormElememt = document.querySelector('.js-button-new-form');
-const labelMesageError = document.querySelector('.js-label-error');
+const labelMesage = document.querySelector('.js-label-error');
 const input_search_desc = document.querySelector('.js_in_search_desc');
 
 //Objetos con cada gatito
@@ -76,6 +76,7 @@ function handleClickNewCatForm(event) {
   event.preventDefault();
   if (newFormElement.classList.contains('collapsed')) {
     showNewCatForm();
+    labelMesage.innerHTML = '';
   } else {
     hideNewCatForm();
   }
@@ -94,17 +95,16 @@ function addNewKitten(event) {
     description: valueDesc,
   };
   if (valueDesc === '' && valuePhoto === '' && valueName === '') {
-    labelMesageError.innerHTML = 'Debe rellenar todos los valores';
+    labelMesage.innerHTML = 'Debe rellenar todos los valores';
   } else {
     if (valueDesc !== '' && valuePhoto !== '' && valueName !== '') {
-      labelMesageError.innerHTML = '';
       kittenDataList.push(newKittenDataObject);
       renderKittenList(kittenDataList);
       inputDesc.value = ``;
       inputPhoto.value = ``;
       inputName.value = ``;
       inputRace.value = ``;
-      labelMesageError.innerHTML = 'Mola! Un nuevo gatito en Adalab!';
+      labelMesage.innerHTML = 'Mola! Un nuevo gatito en Adalab!';
     }
   }
 }
@@ -123,7 +123,7 @@ function filterKitten(event) {
   const descrSearchText = input_search_desc.value;
   listElement.innerHTML = '';
   for (const kittenItem of kittenDataList) {
-    if (kittenItem.desc.includes(descrSearchText)) {
+    if (kittenItem.desc.toLowerCase().includes(descrSearchText.toLowerCase())) {
       listElement.innerHTML += renderKitten(kittenItem);
     }
   }
