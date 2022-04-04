@@ -13,9 +13,12 @@ const inputRace = document.querySelector('.js-input-race');
 const linkNewFormElememt = document.querySelector('.js-button-new-form');
 const labelMesage = document.querySelector('.js-label-error');
 const input_search_desc = document.querySelector('.js_in_search_desc');
+const GITHUB_USER = 'tanferest';
+//const SERVER_URL 
 
 //Objetos con cada gatito
-const kittenData_1 = {
+// YA NO HACE FALTA - LOS GATITOS VIENEN DE LA API
+/*const kittenData_1 = {
   image: 'https://ychef.files.bbci.co.uk/976x549/p07ryyyj.jpg',
   name: 'Anastacio',
   desc: 'Ruiseño, juguetón, le guta estar tranquilo y que nadie le moleste. Es una maravilla acariciarle!',
@@ -34,9 +37,9 @@ const kittenData_3 = {
   name: 'Cielo',
   desc: 'Ruiseño, juguetón, le guta estar tranquilo y que nadie le moleste. Es una maravilla acariciarle!',
   race: 'British Shorthair',
-};
+};*/
 
-const kittenDataList = [kittenData_1, kittenData_2, kittenData_3];
+let kittenDataList = [];
 
 //Funciones
 function renderKitten(kittenData) {
@@ -44,7 +47,7 @@ function renderKitten(kittenData) {
     <article>
       <img
         class="card_img"
-        src=${kittenData.image}
+        src=${kittenData.url}
         alt="gatito"
       />
       <h3 class="card_title">${kittenData.name}</h3>
@@ -132,8 +135,23 @@ function filterKitten(event) {
 //Mostrar el litado de gatitos en ell HTML
 renderKittenList(kittenDataList);
 
+
+// Obtener listado de gatitos de la API
+function getKittenData() {
+  fetch(`https://adalab-api.herokuapp.com/api/kittens/${GITHUB_USER}`, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+  })
+  .then((response) => response.json())
+  .then((data) => {
+    kittenDataList = data.results;
+    console.log(data);
+    renderKittenList(kittenDataList);
+  })
+}
+getKittenData();
 //Eventos
 linkNewFormElememt.addEventListener('click', handleClickNewCatForm);
-searchButton.addEventListener('click', filterKitten);
+searchButton.addEventListener('click', filterKitten, getKittenData);
 buttonAdd.addEventListener('click', addNewKitten);
 buttonCancelForm.addEventListener('click', cancelNewKitten);
