@@ -147,6 +147,7 @@ searchButton.addEventListener('click', filterKitten /*getKittenData*/);
 buttonAdd.addEventListener('click', addNewKitten);
 buttonCancelForm.addEventListener('click', cancelNewKitten);
 
+//LOCAL STORAGE
 if (kittenListStored) {
   //si existe el listado de gatitos en el local storage
   // vuelve a pintar el listado de gatitos
