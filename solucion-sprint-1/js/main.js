@@ -14,7 +14,9 @@ const linkNewFormElememt = document.querySelector('.js-button-new-form');
 const labelMesage = document.querySelector('.js-label-error');
 const input_search_desc = document.querySelector('.js_in_search_desc');
 const GITHUB_USER = 'tanferest';
-//const SERVER_URL 
+const kittenListStored = JSON.parse(localStorage.getItem('kittensList'));
+
+//const SERVER_URL
 
 //Objetos con cada gatito
 // YA NO HACE FALTA - LOS GATITOS VIENEN DE LA API
@@ -135,23 +137,38 @@ function filterKitten(event) {
 //Mostrar el litado de gatitos en ell HTML
 renderKittenList(kittenDataList);
 
-
 // Obtener listado de gatitos de la API
-function getKittenData() {
-  fetch(`https://adalab-api.herokuapp.com/api/kittens/${GITHUB_USER}`, {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' },
-  })
-  .then((response) => response.json())
-  .then((data) => {
-    kittenDataList = data.results;
-    console.log(data);
-    renderKittenList(kittenDataList);
-  })
-}
-getKittenData();
+//function getKittenData()
+//getKittenData();
+
 //Eventos
 linkNewFormElememt.addEventListener('click', handleClickNewCatForm);
-searchButton.addEventListener('click', filterKitten, getKittenData);
+searchButton.addEventListener('click', filterKitten /*getKittenData*/);
 buttonAdd.addEventListener('click', addNewKitten);
 buttonCancelForm.addEventListener('click', cancelNewKitten);
+
+if (kittenListStored) {
+  //si existe el listado de gatitos en el local storage
+  // vuelve a pintar el listado de gatitos
+  //...
+  //completa el código...
+} else {
+  //sino existe el listado de gatitos en el local storage
+  //haz la petición al servidor
+
+  fetch(`https://adalab-api.herokuapp.com/api/kittens/${GITHUB_USER}`, {
+    method: 'POST',
+    body: JSON.stringify(kittenDataList),
+    headers: { 'Content-Type': 'application/json' },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      kittenDataList = data.results;
+      console.log(data);
+      renderKittenList(kittenDataList);
+    });
+
+  //guarda el listado obtenido en el local storage.
+  //vuelve a pintar el listado de gatitos
+  //completa el código...
+}
