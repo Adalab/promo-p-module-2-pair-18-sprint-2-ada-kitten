@@ -15,32 +15,7 @@ const labelMesage = document.querySelector('.js-label-error');
 const input_search_desc = document.querySelector('.js_in_search_desc');
 const GITHUB_USER = 'tanferest';
 const kittenListStored = JSON.parse(localStorage.getItem('kittensList'));
-
-//const SERVER_URL
-
-//Objetos con cada gatito
-// YA NO HACE FALTA - LOS GATITOS VIENEN DE LA API
-/*const kittenData_1 = {
-  image: 'https://ychef.files.bbci.co.uk/976x549/p07ryyyj.jpg',
-  name: 'Anastacio',
-  desc: 'Ruiseño, juguetón, le guta estar tranquilo y que nadie le moleste. Es una maravilla acariciarle!',
-  race: 'British Shorthair',
-};
-const kittenData_2 = {
-  image:
-    'https://media-cldnry.s-nbcnews.com/image/upload/t_nbcnews-fp-1200-630,f_auto,q_auto:best/newscms/2019_39/3021711/190923-cat-pet-stock-cs-1052a.jpg',
-  name: 'Fiona',
-  desc: 'Juguetón, le guta estar tranquilo y que nadie le moleste. Es una maravilla acariciarle!',
-  race: 'British Shorthair',
-};
-const kittenData_3 = {
-  image:
-    'https://images.emedicinehealth.com/images/article/main_image/cat-scratch-disease.jpg',
-  name: 'Cielo',
-  desc: 'Ruiseño, juguetón, le guta estar tranquilo y que nadie le moleste. Es una maravilla acariciarle!',
-  race: 'British Shorthair',
-};*/
-
+//const SERVER_URL 
 let kittenDataList = [];
 
 //Funciones
@@ -135,41 +110,44 @@ function filterKitten(event) {
 }
 
 //Mostrar el litado de gatitos en ell HTML
-renderKittenList(kittenDataList);
+
 
 // Obtener listado de gatitos de la API
-//function getKittenData()
-//getKittenData();
-
-//Eventos
-linkNewFormElememt.addEventListener('click', handleClickNewCatForm);
-searchButton.addEventListener('click', filterKitten /*getKittenData*/);
-buttonAdd.addEventListener('click', addNewKitten);
-buttonCancelForm.addEventListener('click', cancelNewKitten);
-
-//LOCAL STORAGE
-if (kittenListStored) {
+function getKittenData() {
+  fetch(`https://adalab-api.herokuapp.com/api/kittens/${GITHUB_USER}`, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+  })
+  .then((response) => response.json())
+  .then((data) => {
+    kittenDataList = data.results;
+    console.log(data.results);
+    localStorage.setItem('kittensList', JSON.stringify(kittenDataList));
+    renderKittenList(kittenDataList);
+  })
+}
+// getKittenData();
+if (kittenListStored !== null) {
   //si existe el listado de gatitos en el local storage
   // vuelve a pintar el listado de gatitos
+  kittenDataList = kittenListStored;
+  renderKittenList(kittenListStored);
   //...
   //completa el código...
 } else {
   //sino existe el listado de gatitos en el local storage
   //haz la petición al servidor
-
-  fetch(`https://adalab-api.herokuapp.com/api/kittens/${GITHUB_USER}`, {
-    method: 'POST',
-    body: JSON.stringify(kittenDataList),
-    headers: { 'Content-Type': 'application/json' },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      kittenDataList = data.results;
-      console.log(data);
-      renderKittenList(kittenDataList);
-    });
-
-  //guarda el listado obtenido en el local storage.
-  //vuelve a pintar el listado de gatitos
-  //completa el código...
+  getKittenData();
 }
+      //guarda el listado obtenido en el local storage;
+      //vuelve a pintar el listado de gatitos
+      //completa el código...
+      
+
+
+
+//Eventos
+linkNewFormElememt.addEventListener('click', handleClickNewCatForm);
+searchButton.addEventListener('click', filterKitten, getKittenData);
+buttonAdd.addEventListener('click', addNewKitten);
+buttonCancelForm.addEventListener('click', cancelNewKitten);
